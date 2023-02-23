@@ -21,10 +21,6 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Save state
-      run: echo "{name}={value}" >> $GITHUB_STATE
-    - name: Set output
-      run: echo "{name}={value}" >> $GITHUB_OUTPUT
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
