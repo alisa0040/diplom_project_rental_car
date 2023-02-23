@@ -14,7 +14,7 @@ colorama==0.4.5
 config==0.5.1
 cryptography==37.0.4
 distlib==0.3.6
-Django==1.9.1
+Django==2.2
 django-ajax-selects==2.2.0
 django-multiselectfield==0.1.12
 djangorestframework==3.13.1
