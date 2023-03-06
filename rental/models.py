@@ -14,10 +14,22 @@ class Rental(models.Model):
     end_date = models.DateField(auto_now_add=False, null=False)
     objects = RentalManager()
 
+    def save(self, *args, **kwargs):
+        self.car.available = False
+        self.car.save()
+        super(Rental, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.car.available = True
+        self.car.save()
+        super(Rental, self).delete(*args, **kwargs)
+
     @property
     def total_amount(self):
         return self.car.cost_per_day * (self.end_date - self.start_date).days
 
     def __str__(self):
         return str(self.car) + '-' + str(self.customer)
+
+
 
