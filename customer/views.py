@@ -1,25 +1,16 @@
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import generics
-from rest_framework.generics import UpdateAPIView, DestroyAPIView
-
+from rest_framework.generics import RetrieveUpdateDestroyAPIView,ListCreateAPIView
 from customer.models import Customer
 from customer.serializers import CustomerSerializer
 
-
-class CustomerList(generics.ListCreateAPIView):
+class CustomerList(ListCreateAPIView):
     queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer
-
-
-class CustomerDeleteView(DestroyAPIView):
     serializer_class = CustomerSerializer
     permission_classes = (IsAuthenticated,)
-    queryset = Customer.objects.all()
-    lookup_field = 'pk'
 
-
-class CustomerUpdateView(UpdateAPIView):
+class CustomerDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = CustomerSerializer
-    permission_classes = (IsAuthenticated,)
-    queryset = Customer.objects.all()
-    lookup_field = 'pk'
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Customer.objects.filter(user=self.request.user)
