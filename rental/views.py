@@ -9,6 +9,8 @@ from rental.serializers import RentalSerializer
 from reservation.models import Reservation
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
+from users.permission import IsAdminUser
+
 
 class RentalList(ListAPIView):
     serializer_class = RentalSerializer
@@ -17,7 +19,10 @@ class RentalList(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         customer = Customer.objects.get(name=user.username)
-        return Rental.objects.filter(customer=customer)
+        if user.is_staff:
+            return Rental.objects.all()
+        else:
+            return Rental.objects.filter(customer=customer)
 
 class RentalCreateView(CreateAPIView):
     queryset = Rental.objects.all()
@@ -31,7 +36,10 @@ class RentalDetailView(RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         user = self.request.user
         customer = Customer.objects.get(name=user.username)
-        return Rental.objects.filter(customer=customer)
+        if user.is_staff:
+            return Rental.objects.all()
+        else:
+            return Rental.objects.filter(customer=customer)
 
     def get_object(self):
         queryset = self.get_queryset()
