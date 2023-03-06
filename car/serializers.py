@@ -37,7 +37,7 @@ class FuelTypeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate_name(self, value):
-        if value in ["Petrol", "Diesel", "Gasoline", "Hybrid","Electric"]:
+        if value in ["Petrol", "Diesel", "Gasoline", "Hybrid", "Electric"]:
             return value
         raise serializers.ValidationError \
             ("Invalid fuel type name.Valid fuel types are Petrol, Diesel, Gasoline, Hybrid,Electric")
