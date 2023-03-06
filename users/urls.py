@@ -1,12 +1,3 @@
-# from django.urls import path
-#
-# from users.views import UserCreate, UserList
-#
-# urlpatterns = [
-#     path('signup/', UserCreate.as_view(), name='signup'),
-#     path('list/', UserList.as_view(), name='users'),
-#     # path('api-token-auth/', ObtainTokenView.as_view()),
-#     ]
 from users.views import SignUpView,LoginView,UserList,UserDeleteView,UserDetailView
 from django.urls import path
 from rest_framework_simplejwt.views import (
