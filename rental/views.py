@@ -9,7 +9,6 @@ from rental.serializers import RentalSerializer
 from reservation.models import Reservation
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
-from users.permission import IsAdminUser
 
 
 class RentalList(ListAPIView):
