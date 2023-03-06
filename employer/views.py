@@ -1,27 +1,17 @@
-
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import generics
-from rest_framework.generics import UpdateAPIView, DestroyAPIView
-
+from rest_framework.generics import RetrieveUpdateDestroyAPIView,ListCreateAPIView
 from employer.models import Employer
 from employer.serializers import EmployerSerializer
 
 
-class EmployerList(generics.ListCreateAPIView):
+class EmployerList(ListCreateAPIView):
     queryset = Employer.objects.all()
     serializer_class = EmployerSerializer
     permission_classes = (IsAuthenticated,)
 
-class EmployerUpdateView(UpdateAPIView):
+class EmployerDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = EmployerSerializer
-    permission_classes = (IsAuthenticated,)
-    queryset = Employer.objects.all()
-    lookup_field = 'pk'
+    permission_classes = [IsAuthenticated]
 
-class EmployerDeleteView(DestroyAPIView):
-    serializer_class = EmployerSerializer
-    permission_classes = (IsAuthenticated,)
-    queryset = Employer.objects.all()
-    lookup_field = 'pk'
-
-
+    def get_queryset(self):
+        return Employer.objects.filter(user=self.request.user)
