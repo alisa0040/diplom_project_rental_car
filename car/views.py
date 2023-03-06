@@ -6,8 +6,10 @@ from .serializers import FuelTypeSerializer, CarImageSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions
 
-from rest_framework.generics import UpdateAPIView, DestroyAPIView, ListCreateAPIView
-
+from rest_framework.generics import UpdateAPIView, DestroyAPIView, ListCreateAPIView,ListAPIView,CreateAPIView,RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticated
+from users.models import User
+from employer.models import Employer
 
 class CarBrandList(ListCreateAPIView):
     queryset = CarBrand.objects.all()
@@ -16,10 +18,11 @@ class CarBrandList(ListCreateAPIView):
 
 
 class CarBrandDeleteView(DestroyAPIView):
-    queryset = CarBrand.objects.all()
     serializer_class = CarBrandSerializer
     permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'pk'
+    def get_queryset(self):
+        return CarBrand.objects.filter(is_employer__user=self.request.user)
 
 
 class CarModelList(ListCreateAPIView):
@@ -29,10 +32,11 @@ class CarModelList(ListCreateAPIView):
 
 
 class CarModelDeleteView(DestroyAPIView):
-    queryset = CarModel.objects.all()
     serializer_class = CarModelSerializer
     permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'pk'
+    def get_queryset(self):
+        return CarModel.objects.filter(is_employer__user=self.request.user)
 
 
 class FuelTypeList(ListCreateAPIView):
@@ -47,37 +51,37 @@ class CarOptionList(ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 
+
 class CarOptionDeleteView(DestroyAPIView):
-    queryset = CarOption.objects.all()
     serializer_class = CarOptionSerializer
     permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'pk'
+    def get_queryset(self):
+        return CarOption.objects.filter(is_employer__user=self.request.user)
+
 
 
 class CarApiview(APIView):
     def get(self, requests, id):
         car = get_object_or_404(Car, id=id)
         return Response(CarSerializer(car).data)
+class CarList(ListAPIView):
+    serializer_class = CarSerializer
+    queryset = Car.objects.all()
 
 
-class CarList(generics.ListCreateAPIView):
+class CarCreateView(CreateAPIView):
     queryset = Car.objects.all()
     serializer_class = CarSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-
-class CarUpdateView(UpdateAPIView):
-    queryset = Car.objects.all()
+class CarDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = CarSerializer
+    permission_classes = [IsAuthenticated]
     lookup_field = 'pk'
-    permission_classes = [permissions.IsAuthenticated]
 
-
-class CarDeleteView(DestroyAPIView):
-    queryset = Car.objects.all()
-    serializer_class = CarSerializer
-    lookup_field = 'pk'
-    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        return Car.objects.filter(is_employer__user=self.request.user)
 
 
 class CarImageList(ListCreateAPIView):
@@ -87,10 +91,11 @@ class CarImageList(ListCreateAPIView):
 
 
 class CarImageDeleteView(DestroyAPIView):
-    queryset = CarImage.objects.all()
     serializer_class = CarImageSerializer
     lookup_field = 'pk'
     permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        return CarImage.objects.filter(is_employer__user=self.request.user)
 
 
 class CarTransmissionList(ListCreateAPIView):
@@ -100,7 +105,8 @@ class CarTransmissionList(ListCreateAPIView):
 
 
 class CarTransmissionDeleteView(DestroyAPIView):
-    queryset = CarTransmission.objects.all()
     serializer_class = CarTransmissionSerializer
     permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'pk'
+    def get_queryset(self):
+        return CarTransmission.objects.filter(is_employer__user=self.request.user)
