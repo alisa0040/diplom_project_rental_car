@@ -31,7 +31,7 @@ class RentalDetailView(RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         user = self.request.user
         customer = Customer.objects.get(name=user.username)
-        return Reservation.objects.filter(customer=customer)
+        return Rental.objects.filter(customer=customer)
 
     def get_object(self):
         queryset = self.get_queryset()
